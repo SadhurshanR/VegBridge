@@ -24,29 +24,33 @@ const LoginSection = ({ onLoginSuccess }) => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
-      if (response.status === 400 || response.status === 401) {
-        setErrors({ general: data.message });
-      } else if (response.status !== 200) {
-        setErrors({ general: "Unexpected error occurred." });
+      if (!response.ok) {
+        const data = await response.json();
+        if (response.status === 400 || response.status === 401) {
+          setErrors({ general: data.message });
+        } else {
+          setErrors({ general: "Unexpected error occurred." });
+        }
       } else {
+        const data = await response.json();
         const { token, role, userDetails } = data;
         localStorage.setItem("token", token);
         localStorage.setItem("userRole", role);
         localStorage.setItem("userDetails", JSON.stringify(userDetails));
-        console.log("Logged in user details:", userDetails);
-
         onLoginSuccess(role);
 
-        if (role === "farmer") {
-          navigate("/farmer-marketplace");
-        } else if (role === "business") {
-          navigate("/business-marketplace");
-        } else if (role === "admin") {
-          navigate("/admin-marketplace");
-        } else {
-          navigate("/");
+        switch (role) {
+          case "farmer":
+            navigate("/farmer-marketplace");
+            break;
+          case "business":
+            navigate("/business-marketplace");
+            break;
+          case "admin":
+            navigate("/admin-marketplace");
+            break;
+          default:
+            navigate("/");
         }
       }
     } catch (error) {
@@ -67,9 +71,7 @@ const LoginSection = ({ onLoginSuccess }) => {
                 <h3 className="my-3 text-uppercase text-center">Login</h3>
                 <form onSubmit={handleSubmit}>
                   <div className="form-outline mb-3">
-                    <label htmlFor="username" className="form-label fw-bold">
-                      Username
-                    </label>
+                    <label htmlFor="username" className="form-label fw-bold">Username</label>
                     <input
                       type="text"
                       id="username"
@@ -81,9 +83,7 @@ const LoginSection = ({ onLoginSuccess }) => {
                     />
                   </div>
                   <div className="form-outline mb-3">
-                    <label htmlFor="password" className="form-label fw-bold">
-                      Password
-                    </label>
+                    <label htmlFor="password" className="form-label fw-bold">Password</label>
                     <input
                       type="password"
                       id="password"
@@ -106,9 +106,7 @@ const LoginSection = ({ onLoginSuccess }) => {
                 <div className="mt-3 text-center">
                   <p>
                     Don't have an account?{" "}
-                    <Link to="/register" style={{ color: "#0dcaf0" }}>
-                      Register here
-                    </Link>
+                    <Link to="/register" style={{ color: "#0dcaf0" }}>Register here</Link>
                   </p>
                 </div>
               </div>
