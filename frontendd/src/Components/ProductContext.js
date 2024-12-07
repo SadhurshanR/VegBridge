@@ -9,7 +9,7 @@ export const ProductProvider = ({ children }) => {
   // Fetch All Products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products");
+      const res = await axios.get("https://veg-bridge-u2j3.vercel.app/api/products");
       setProducts(res.data);
     } catch (error) {
       console.error("Error fetching products:", error.message);
@@ -21,7 +21,7 @@ export const ProductProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token"); // Retrieve token from storage
       const res = await axios.put(
-        `http://localhost:5000/api/products/${id}`,
+        `https://veg-bridge-u2j3.vercel.app/api/products/${id}`,
         { status },
         {
           headers: {
