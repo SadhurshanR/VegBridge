@@ -12,7 +12,12 @@ const GuideRoutes = require('./routes/guideRoutes');
 
 // Initialize express app
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: 'https://veg-bridge-j9odqq6aq-rajarathnam-sadhurshans-projects.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // MongoDB Connection
@@ -36,12 +41,9 @@ app.use('/GuideImages', express.static(guideImagesDir));
 
 // Use routes
 app.use('/api', authRoutes);
-app.use('/api/products', productRoutes); 
-
-
+app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes); 
 app.use('/api/guides', GuideRoutes);
-
 
 // Start the Server
 const PORT = process.env.PORT || 5000;
