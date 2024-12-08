@@ -12,23 +12,14 @@ const GuideRoutes = require('./routes/guideRoutes');
 
 // Initialize express app
 const app = express();
-app.use(cors({
-  origin: 'https://veg-bridge.vercel.app', // Frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow relevant methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
-  credentials: true, // Allow cookies if needed
-}));
-
-// Enable OPTIONS handling for preflight requests
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://veg-bridge.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.status(200).end();
-});
-
-
-// Parse incoming requests
+// Initialize express app
+const app = express();
+const corsOptions = {
+  origin: 'https://veg-bridge-j9odqq6aq-rajarathnam-sadhurshans-projects.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 
