@@ -13,12 +13,21 @@ const GuideRoutes = require('./routes/guideRoutes');
 // Initialize express app
 const app = express();
 const corsOptions = {
-  origin: 'https://veg-bridge.vercel.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: 'https://veg-bridge.vercel.app', // Frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Include OPTIONS for preflight requests
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+  credentials: true, // If using cookies or credentials
 };
+
+// Enable CORS for all routes
 app.use(cors(corsOptions));
+
+// Explicitly handle preflight OPTIONS requests
+app.options('*', cors(corsOptions));
+
+// Parse incoming requests
 app.use(bodyParser.json());
+
 
 // MongoDB Connection
 connectDB();
