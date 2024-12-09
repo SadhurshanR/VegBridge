@@ -15,7 +15,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: 'https://veg-bridge-j9odqq6aq-rajarathnam-sadhurshans-projects.vercel.app',
+  origin: 'https://veg-bridge.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
