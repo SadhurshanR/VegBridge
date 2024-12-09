@@ -12,16 +12,21 @@ const GuideRoutes = require('./routes/guideRoutes');
 
 // Initialize express app
 const app = express();
-// Initialize express app
-const app = express();
+
+// CORS configuration
 const corsOptions = {
   origin: 'https://veg-bridge-j9odqq6aq-rajarathnam-sadhurshans-projects.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 };
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
 
+// Preflight handling for all routes
+app.options('*', cors(corsOptions));
+
+// Middleware
+app.use(bodyParser.json());
 
 // MongoDB Connection
 connectDB();
@@ -41,6 +46,14 @@ if (!fs.existsSync(guideImagesDir)) {
 // Serve Uploaded Files
 app.use('/uploads', express.static(uploadDir));
 app.use('/GuideImages', express.static(guideImagesDir));
+
+// Global fallback headers for CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://veg-bridge-j9odqq6aq-rajarathnam-sadhurshans-projects.vercel.app');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  next();
+});
 
 // Use routes
 app.use('/api', authRoutes);
