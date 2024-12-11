@@ -39,7 +39,7 @@ if (!fs.existsSync(uploadDir)) {
 // Ensure 'GuideImages' directory exists
 const guideImagesDir = path.join(__dirname, 'GuideImages');
 if (!fs.existsSync(guideImagesDir)) {
-  fs.mkdirSync(guideImagesDir, { recursive: true });
+  fs.mkdirSync(guideImagesDir);
 }
 
 // Serve Uploaded Files
