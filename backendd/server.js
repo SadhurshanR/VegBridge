@@ -13,14 +13,17 @@ const GuideRoutes = require('./routes/guideRoutes');
 // Initialize express app
 const app = express();
 
-// CORS configuration
 const corsOptions = {
-  origin: 'https://veg-bridge.vercel.app', // Frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  origin: 'https://veg-bridge.vercel.app', // Allow requests only from your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Include OPTIONS for preflight
+  allowedHeaders: ['Content-Type', 'Authorization'], // Include headers sent by the frontend
+  credentials: true, // Include credentials (cookies, auth headers)
 };
+
 app.use(cors(corsOptions));
+
+// Handle preflight OPTIONS requests globally
+app.options('*', cors(corsOptions));
 
 // Middleware
 app.use(bodyParser.json());
@@ -46,11 +49,17 @@ app.use('/GuideImages', express.static(guideImagesDir));
 
 // Fallback CORS headers for all routes
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://veg-bridge.vercel.app');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Origin', 'https://veg-bridge.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    return res.status(204).end(); // Respond with 204 for preflight
+  }
   next();
 });
+
+
 
 // Use routes
 app.use('/api', authRoutes);
